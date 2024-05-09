@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false,
       },
       password: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       profileUrl: {
