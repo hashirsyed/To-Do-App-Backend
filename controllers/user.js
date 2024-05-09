@@ -5,6 +5,47 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
+  signUp: async function (req, res) {
+    try {
+      const { name, email, password, profileUrl } = req.body;
+      if (!name && !email && !password ) {
+        throw generateErrorInstance({
+          status: 404,
+          message: "Required fields cannot be empty",
+        });
+      }
+
+      let user = await Users.findOne({
+        where: {
+          email,
+        },
+      });
+
+      if(user){
+        throw generateErrorInstance({
+          status: 409,
+          message: "User already exist with this email",
+        });
+      }
+      
+      const hashedPassword = await bcrypt.hash(password,12)
+      user = await Users.create({
+        name,
+        email,
+        password:hashedPassword,
+        profileUrl,
+      });
+      user = await user.toJSON();
+      const token = jwt.sign(user, config.get("jwt_secret"), {
+        expiresIn: "1d",
+      });
+      
+      res.status(201).send({user,token});
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err.message || "Something went wrong!");
+    }
+  },
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
