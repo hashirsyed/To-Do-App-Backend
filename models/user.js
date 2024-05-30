@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeUpdate(async (user) => {
     user.dataValues.updatedAt = moment().unix();
   });
-
+  User.associate = ((models)=>{
+    User.hasMany(models.Tasks,{
+        foreignKey : "fkUserId",
+        as : "tasks"
+    })
+})
   return User;
 };
