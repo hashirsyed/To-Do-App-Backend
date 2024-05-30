@@ -38,7 +38,7 @@ module.exports = {
       });
       user = await user.toJSON();
       const token = jwt.sign(user, "JWTSECRET", {
-        expiresIn: "30d",
+        expiresIn: "365d",
       });
       
       res.status(201).send({user,token});
@@ -83,7 +83,7 @@ module.exports = {
       delete user.password;
 
       const token = jwt.sign(user, "JWTSECRET", {
-        expiresIn: "30d",
+        expiresIn: "365d",
       });
 
       return res.status(200).send({ user, token });
