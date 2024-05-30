@@ -5,8 +5,10 @@ const router = Router();
 
 // Controllers
 const controller = require("../controllers/tasks");
+const auth = require("../middlewares/auth");
 
 // Routes
-router.post("/:userId/tasks",controller.create);
+router.post("/:userId/tasks" , auth , controller.create);
+router.get("/:userId/tasks", auth , controller.getAll);
 
 module.exports = router;

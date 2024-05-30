@@ -1,4 +1,5 @@
-const config = require("../config");
+// const config = require("../config");
+// const { secret } = require("../constants");
 const { Users } = require("../models");
 const { generateErrorInstance } = require("../utils");
 const bcrypt = require("bcryptjs");
@@ -36,8 +37,8 @@ module.exports = {
         profileUrl,
       });
       user = await user.toJSON();
-      const token = jwt.sign(user, config.get("jwt_secret"), {
-        expiresIn: "1d",
+      const token = jwt.sign(user, "JWTSECRET", {
+        expiresIn: "30d",
       });
       
       res.status(201).send({user,token});
@@ -78,11 +79,11 @@ module.exports = {
         });
       }
 
-      user = user.toJSON();
+      user = await user.toJSON();
       delete user.password;
 
-      const token = jwt.sign(user, config.get("jwt_secret"), {
-        expiresIn: "1d",
+      const token = jwt.sign(user, "JWTSECRET", {
+        expiresIn: "30d",
       });
 
       return res.status(200).send({ user, token });

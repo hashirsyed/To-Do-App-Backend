@@ -27,4 +27,25 @@ module.exports = {
       res.status(500).send(err.message || "Something went wrong!");
     }
   },
+  getAll: async function (req, res) {
+    try {
+      const { userId } = req.params;
+      const { status } = req.query;
+
+      const validStatuses = ["In Progress", "Todo", "Completed", "Cancelled"];
+
+      const whereClause = { fkUserId: userId };
+      if (validStatuses.includes(status)) {
+        whereClause.status = status;
+      }
+
+      let task = await Tasks.findAll({
+        where: whereClause,
+      });
+      res.status(201).send(task);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err.message || "Something went wrong!");
+    }
+  },
 };
