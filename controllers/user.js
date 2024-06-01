@@ -1,6 +1,6 @@
 // const config = require("../config");
 // const { secret } = require("../constants");
-const { Users } = require("../models");
+const { Users , Tasks } = require("../models");
 const { generateErrorInstance } = require("../utils");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -87,6 +87,26 @@ module.exports = {
       });
 
       return res.status(200).send({ user, token });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(err.status || 500)
+        .send(err.message || "Something went wrong!");
+    }
+  },
+  tasksCount: async (req, res) => {
+    try {
+      const { status } = req.query;
+      const { userId } = req.params;
+      
+      let tasks = await Tasks.count({
+        where: {
+          fkUserId : userId,
+          status : status
+        },
+      });
+
+      return res.status(200).send({count : tasks});
     } catch (err) {
       console.log(err);
       return res
