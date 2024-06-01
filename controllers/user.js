@@ -94,7 +94,7 @@ module.exports = {
         .send(err.message || "Something went wrong!");
     }
   },
-  tasksCount: async (req, res) => {
+  statusTasksCount: async (req, res) => {
     try {
       const { status } = req.query;
       const { userId } = req.params;
@@ -114,4 +114,23 @@ module.exports = {
         .send(err.message || "Something went wrong!");
     }
   },
+  taskCount: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      let tasks = await Tasks.count({
+        where: {
+          fkUserId : userId,
+        },
+      });
+
+      return res.status(200).send({count : tasks});
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(err.status || 500)
+        .send(err.message || "Something went wrong!");
+    }
+  },
+
 };
