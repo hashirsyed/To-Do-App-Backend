@@ -1,5 +1,6 @@
-const config = require("../config");
-const { Users } = require("../models");
+// const config = require("../config");
+// const { secret } = require("../constants");
+const { Users , Tasks } = require("../models");
 const { generateErrorInstance } = require("../utils");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -36,8 +37,8 @@ module.exports = {
         profileUrl,
       });
       user = await user.toJSON();
-      const token = jwt.sign(user, config.get("jwt_secret"), {
-        expiresIn: "1d",
+      const token = jwt.sign(user, "JWTSECRET", {
+        expiresIn: "365d",
       });
       
       res.status(201).send({user,token});
@@ -78,11 +79,11 @@ module.exports = {
         });
       }
 
-      user = user.toJSON();
+      user = await user.toJSON();
       delete user.password;
 
-      const token = jwt.sign(user, config.get("jwt_secret"), {
-        expiresIn: "1d",
+      const token = jwt.sign(user, "JWTSECRET", {
+        expiresIn: "365d",
       });
 
       return res.status(200).send({ user, token });
@@ -93,4 +94,43 @@ module.exports = {
         .send(err.message || "Something went wrong!");
     }
   },
+  statusTasksCount: async (req, res) => {
+    try {
+      const { status } = req.query;
+      const { userId } = req.params;
+      
+      let tasks = await Tasks.count({
+        where: {
+          fkUserId : userId,
+          status : status
+        },
+      });
+
+      return res.status(200).send({count : tasks});
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(err.status || 500)
+        .send(err.message || "Something went wrong!");
+    }
+  },
+  taskCount: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      let tasks = await Tasks.count({
+        where: {
+          fkUserId : userId,
+        },
+      });
+
+      return res.status(200).send({count : tasks});
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(err.status || 500)
+        .send(err.message || "Something went wrong!");
+    }
+  },
+
 };
