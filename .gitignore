@@ -109,3 +109,5 @@ config/environments/test.json
 .idea/
 client/.DS_Store
 client/build
+
+public/Images/
