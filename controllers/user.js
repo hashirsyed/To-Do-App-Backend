@@ -1,5 +1,6 @@
 // const config = require("../config");
 // const { secret } = require("../constants");
+const config = require("../config");
 const { Users , Tasks } = require("../models");
 const { generateErrorInstance } = require("../utils");
 const bcrypt = require("bcryptjs");
@@ -37,7 +38,7 @@ module.exports = {
         profileUrl,
       });
       user = await user.toJSON();
-      const token = jwt.sign(user, "JWTSECRET", {
+      const token = jwt.sign(user, config.get("jwt_secret"), {
         expiresIn: "365d",
       });
       
@@ -82,7 +83,7 @@ module.exports = {
       user = await user.toJSON();
       delete user.password;
 
-      const token = jwt.sign(user, "JWTSECRET", {
+      const token = jwt.sign(user, config.get("jwt_secret"), {
         expiresIn: "365d",
       });
 
@@ -94,6 +95,47 @@ module.exports = {
         .send(err.message || "Something went wrong!");
     }
   },
+  edit: async function (req, res) {
+    try {
+      console.log(req.file)
+      const { name } = req.body;
+      const { userId } = req.params;
+
+      if (!userId) {
+        throw generateErrorInstance({
+          status: 404,
+          message: "User ID is required",
+        });
+      }
+
+      let user = await Users.findByPk(userId);
+
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      console.log(req.file)
+      await user.update({
+        name,
+        profileUrl : `/Images/${req.file.filename}`
+      });
+
+      res.status(200).send({ message: "User updated successfully", user });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err.message || "Something went wrong!");
+    }
+  },
+  getMyProfile: async (req, res) => {
+    try{
+    let {userId} = req.params;
+    let user = await Users.findByPk(userId)
+    res.status(201).send( user);
+  } catch (err) {
+    
+    console.log(err);
+    res.status(500).send(err.message || "Something went wrong!");
+  }  
+},
   statusTasksCount: async (req, res) => {
     try {
       const { status } = req.query;
