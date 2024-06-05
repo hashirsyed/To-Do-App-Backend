@@ -15,6 +15,7 @@ let sequelize = new Sequelize(
   config.get("db.password"),
   {
     host: config.get("db.host"),
+    port: config.get("db.port"),
     dialect: "mysql",
   }
 );
