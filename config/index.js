@@ -46,7 +46,7 @@ var config = convict({
       default: null,
       env: "DB_PASSWORD"
     },   
-  port: {
+  custom_port: {
     doc: "Database port",
     format: "port",
     default: 3306,
