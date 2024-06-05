@@ -51,7 +51,6 @@ var config = convict({
     format: "port",
     default: 3306,
     env: "DB_PORT",
-    arg: "port",
   },
   },
   jwt_secret: {
