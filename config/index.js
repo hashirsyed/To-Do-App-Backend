@@ -45,7 +45,14 @@ var config = convict({
       format: "*",
       default: null,
       env: "DB_PASSWORD"
-    },
+    },   
+  port: {
+    doc: "Database port",
+    format: "port",
+    default: 3306,
+    env: "DB_PORT",
+    arg: "port",
+  },
   },
   jwt_secret: {
     doc: "Secret for JWT",
