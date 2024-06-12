@@ -113,10 +113,14 @@ module.exports = {
       if (!user) {
         return res.status(404).send("User not found");
       }
+      let profileUrl;
+      if(req.file){
+         profileUrl = `/Images/${req.file.filename}`
+      }
       console.log(req.file)
       await user.update({
         name,
-        profileUrl : `/Images/${req.file.filename}`
+        profileUrl : profileUrl
       });
 
       res.status(200).send({ message: "User updated successfully", user });
@@ -172,6 +176,31 @@ module.exports = {
       return res
         .status(err.status || 500)
         .send(err.message || "Something went wrong!");
+    }
+  },
+  deleteImage: async function (req, res) {
+    try {
+      const { userId } = req.params;
+
+      if (!userId) {
+        throw generateErrorInstance({
+          status: 404,
+          message: "User ID is required",
+        });
+      }
+
+      let user = await Users.findByPk(userId);
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      
+      user.profileUrl = null;
+      await user.save();
+
+      res.status(200).send({ message: "Profile Image deleted successfully" });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err.message || "Something went wrong!");
     }
   },
 

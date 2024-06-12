@@ -27,6 +27,7 @@ router.post("/", controller.signUp);
 router.post("/login", controller.login);
 router.put("/:userId", upload.single("avatar"), controller.edit);
 router.get("/:userId", auth, controller.getMyProfile);
+router.delete("/:userId", auth, controller.deleteImage);
 router.get("/:userId/dashboard/statusTasks", auth, controller.statusTasksCount);
 router.get("/:userId/dashboard/allTasks", auth, controller.taskCount);
 
