@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
+    googleSub: {
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -19,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     profileUrl: {
       type: DataTypes.STRING,
