@@ -24,6 +24,7 @@ const auth = require("../middlewares/auth");
 
 // Routes
 router.post("/", controller.signUp);
+router.post("/google", controller.google);
 router.post("/login", controller.login);
 router.put("/:userId", upload.single("avatar"), controller.edit);
 router.get("/:userId", auth, controller.getMyProfile);

@@ -59,6 +59,9 @@ var config = convict({
     default: "",
     env: "JWT_SECRET",
   },
+  clientId: {
+    default: "725816900088-fuvsj7skkohs1k6ol9cfd0vvl1i5taio.apps.googleusercontent.com"
+  },
 });
 
 // Load environment dependent configuration
